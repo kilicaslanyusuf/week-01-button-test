@@ -26,6 +26,9 @@ layout_mode = 2
 layout_mode = 2
 text = "Hazır"
 
+[node name="ResultLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=640607820]
+layout_mode = 2
+
 [node name="TargetLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1950584225]
 layout_mode = 2
 text = "Hedef: 15
