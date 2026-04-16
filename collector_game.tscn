@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://cddrd4xy402fx"]
+
+[ext_resource type="Script" uid="uid://b4iav0s3u05kc" path="res://player.gd" id="1_86kap"]
+[ext_resource type="Script" uid="uid://yv0img5o5jel" path="res://game.gd" id="1_iik1f"]
+[ext_resource type="Texture2D" uid="uid://dx3iofbmpt48p" path="res://icon.svg" id="2_iik1f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1du3i"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sjvmx"]
+
+[node name="Game" type="Node2D" unique_id=51051188]
+script = ExtResource("1_iik1f")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=4040931]
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer" unique_id=546341840]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Skor : 0"
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=86132533]
+script = ExtResource("1_86kap")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=24958301]
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("2_iik1f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=102121129]
+shape = SubResource("CircleShape2D_1du3i")
+
+[node name="Collectible" type="Area2D" parent="." unique_id=1184919267]
+
+[node name="CollectibleSprite" type="Sprite2D" parent="Collectible" unique_id=38791397]
+scale = Vector2(0.07, 0.07)
+texture = ExtResource("2_iik1f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collectible" unique_id=413826994]
+shape = SubResource("CircleShape2D_sjvmx")
+
+[connection signal="body_entered" from="Collectible" to="." method="_on_collectible_body_entered"]
