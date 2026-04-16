@@ -1,9 +1,12 @@
 extends Control
 
+const SAVE_PATH := "user://save.cfg"
+
 var count := 0
 var time_left := 10
 var game_active := false
 var target_score := 15
+var high_score := 0
 
 var rng := RandomNumberGenerator.new()
 
@@ -11,6 +14,7 @@ var rng := RandomNumberGenerator.new()
 @onready var result_label = $CenterContainer/VBoxContainer/ResultLabel
 @onready var target_label = $CenterContainer/VBoxContainer/TargetLabel
 @onready var counter_label = $CenterContainer/VBoxContainer/CounterLabel
+@onready var high_score_label = $CenterContainer/VBoxContainer/HighScoreLabel
 @onready var time_label = $CenterContainer/VBoxContainer/TimeLabel
 @onready var start_button = $CenterContainer/VBoxContainer/StartButton
 @onready var increase_button = $CenterContainer/VBoxContainer/IncreaseButton
@@ -19,7 +23,22 @@ var rng := RandomNumberGenerator.new()
 
 func _ready():
 	rng.randomize()
+	load_high_score()
 	prepare_new_round()
+
+func load_high_score():
+	var config = ConfigFile.new()
+	var err = config.load(SAVE_PATH)
+
+	if err == OK:
+		high_score = int(config.get_value("scores", "high_score", 0))
+	else:
+		high_score = 0
+
+func save_high_score():
+	var config = ConfigFile.new()
+	config.set_value("scores", "high_score", high_score)
+	config.save(SAVE_PATH)
 
 func prepare_new_round():
 	target_score = rng.randi_range(12, 20)
@@ -39,6 +58,7 @@ func prepare_new_round():
 func update_ui():
 	target_label.text = "Hedef: %d" % target_score
 	counter_label.text = "Skor: %d" % count
+	high_score_label.text = "En iyi skor: %d" % high_score
 	time_label.text = "Süre: %d" % time_left
 
 func _on_start_button_pressed():
@@ -80,6 +100,12 @@ func finish_round():
 	increase_button.disabled = true
 
 	var diff = count - target_score
+	var new_record := false
+
+	if count > high_score:
+		high_score = count
+		save_high_score()
+		new_record = true
 
 	if diff >= 0:
 		status_label.text = "Kazandın!"
@@ -90,3 +116,8 @@ func finish_round():
 	else:
 		status_label.text = "Kaybettin!"
 		result_label.text = "%d eksik kaldın." % abs(diff)
+
+	if new_record:
+		result_label.text += " Yeni rekor!"
+
+	update_ui()
