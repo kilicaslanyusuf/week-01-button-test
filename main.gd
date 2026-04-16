@@ -3,8 +3,10 @@ extends Control
 var count := 0
 var time_left := 10
 var game_active := false
+var target_score := 15
 
 @onready var status_label = $CenterContainer/VBoxContainer/StatusLabel
+@onready var target_label = $CenterContainer/VBoxContainer/TargetLabel
 @onready var counter_label = $CenterContainer/VBoxContainer/CounterLabel
 @onready var time_label = $CenterContainer/VBoxContainer/TimeLabel
 @onready var game_timer = $CenterContainer/VBoxContainer/GameTimer
@@ -13,6 +15,7 @@ func _ready():
 	update_ui()
 
 func update_ui():
+	target_label.text = "Hedef: %d" % target_score
 	counter_label.text = "Skor: %d" % count
 	time_label.text = "Süre: %d" % time_left
 
@@ -44,5 +47,9 @@ func _on_game_timer_timeout():
 
 		if time_left <= 0:
 			game_active = false
-			status_label.text = "Süre doldu!"
 			game_timer.stop()
+
+			if count >= target_score:
+				status_label.text = "Kazandın!"
+			else:
+				status_label.text = "Kaybettin!"
