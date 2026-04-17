@@ -12,6 +12,9 @@ func _ready():
 	update_ui()
 	move_collectible()
 
+func _physics_process(_delta):
+	check_collect()
+
 func update_ui():
 	score_label.text = "Skor: %d" % score
 
@@ -22,8 +25,8 @@ func move_collectible():
 		rng.randi_range(40, int(size.y) - 40)
 	)
 
-func _on_collectible_body_entered(body):
-	if body == player:
+func check_collect():
+	if player.global_position.distance_to(collectible.global_position) < 25:
 		score += 1
 		update_ui()
 		move_collectible()

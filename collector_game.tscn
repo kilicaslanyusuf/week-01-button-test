@@ -5,8 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://dx3iofbmpt48p" path="res://icon.svg" id="2_iik1f"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1du3i"]
+radius = 18.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sjvmx"]
+radius = 14.0
 
 [node name="Game" type="Node2D" unique_id=51051188]
 script = ExtResource("1_iik1f")
@@ -35,6 +37,7 @@ scale = Vector2(0.07, 0.07)
 texture = ExtResource("2_iik1f")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collectible" unique_id=413826994]
+position = Vector2(543, 248)
 shape = SubResource("CircleShape2D_sjvmx")
 
 [connection signal="body_entered" from="Collectible" to="." method="_on_collectible_body_entered"]
