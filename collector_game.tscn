@@ -15,10 +15,25 @@ script = ExtResource("1_iik1f")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=4040931]
 
-[node name="ScoreLabel" type="Label" parent="CanvasLayer" unique_id=546341840]
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="UIBox" type="VBoxContainer" parent="CanvasLayer" unique_id=1755845479]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 72.0
+offset_bottom = 87.0
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer/UIBox" unique_id=546341840]
+layout_mode = 2
 text = "Skor : 0"
+
+[node name="TimeLabel" type="Label" parent="CanvasLayer/UIBox" unique_id=139017501]
+layout_mode = 2
+text = "Süre: 20"
+
+[node name="StatusLabel" type="Label" parent="CanvasLayer/UIBox" unique_id=1597379407]
+layout_mode = 2
+text = "Topla!"
+
+[node name="GameTimer" type="Timer" parent="." unique_id=2077921762]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=86132533]
 script = ExtResource("1_86kap")
@@ -40,4 +55,5 @@ texture = ExtResource("2_iik1f")
 position = Vector2(543, 248)
 shape = SubResource("CircleShape2D_sjvmx")
 
+[connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
 [connection signal="body_entered" from="Collectible" to="." method="_on_collectible_body_entered"]
