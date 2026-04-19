@@ -13,6 +13,7 @@ var rng := RandomNumberGenerator.new()
 @onready var status_label = $CanvasLayer/UIBox/StatusLabel
 @onready var player = $Player
 @onready var collectible = $Collectible
+@onready var hazard = $Hazard
 @onready var game_timer = $GameTimer
 
 func _ready():
@@ -23,14 +24,16 @@ func start_new_game():
 	score = 0
 	time_left = 20
 	game_active = true
-	status_label.text = "Topla!"
+	status_label.text = "Topla ve kaçın!"
 	move_collectible()
+	move_hazard()
 	update_ui()
 	game_timer.start()
 
 func _physics_process(_delta):
 	if game_active:
 		check_collect()
+		check_hazard()
 
 	if Input.is_action_just_pressed("ui_accept") and not game_active:
 		start_new_game()
@@ -39,11 +42,17 @@ func update_ui():
 	score_label.text = "Skor: %d" % score
 	best_score_label.text = "En iyi skor: %d" % best_score
 	time_label.text = "Süre: %d" % time_left
-	
 
 func move_collectible():
 	var size = get_viewport_rect().size
 	collectible.global_position = Vector2(
+		rng.randi_range(40, int(size.x) - 40),
+		rng.randi_range(40, int(size.y) - 40)
+	)
+
+func move_hazard():
+	var size = get_viewport_rect().size
+	hazard.global_position = Vector2(
 		rng.randi_range(40, int(size.x) - 40),
 		rng.randi_range(40, int(size.y) - 40)
 	)
@@ -55,8 +64,23 @@ func check_collect():
 		if score > best_score:
 			best_score = score
 
+		status_label.text = "Topladın!"
 		update_ui()
 		move_collectible()
+
+func check_hazard():
+	if player.global_position.distance_to(hazard.global_position) < 28:
+		time_left -= 3
+
+		if time_left < 0:
+			time_left = 0
+
+		status_label.text = "Çarptın! -3 saniye"
+		update_ui()
+		move_hazard()
+
+		if time_left <= 0:
+			finish_game()
 
 func _on_game_timer_timeout():
 	if not game_active:

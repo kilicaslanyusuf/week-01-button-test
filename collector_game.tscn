@@ -10,6 +10,9 @@ radius = 18.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_sjvmx"]
 radius = 14.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_iik1f"]
+radius = 16.0
+
 [node name="Game" type="Node2D" unique_id=51051188]
 script = ExtResource("1_iik1f")
 
@@ -58,6 +61,14 @@ texture = ExtResource("2_iik1f")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collectible" unique_id=413826994]
 position = Vector2(543, 248)
 shape = SubResource("CircleShape2D_sjvmx")
+
+[node name="Hazard" type="Area2D" parent="." unique_id=1562727753]
+
+[node name="HazardSprite" type="Sprite2D" parent="Hazard" unique_id=1090380856]
+texture = ExtResource("2_iik1f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hazard" unique_id=788609504]
+shape = SubResource("CircleShape2D_iik1f")
 
 [connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
 [connection signal="body_entered" from="Collectible" to="." method="_on_collectible_body_entered"]
