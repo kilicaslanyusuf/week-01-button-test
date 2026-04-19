@@ -1,12 +1,14 @@
 extends Node2D
 
 var score := 0
+var best_score := 0
 var time_left := 20
-var game_active := true
+var game_active := false
 
 var rng := RandomNumberGenerator.new()
 
 @onready var score_label = $CanvasLayer/UIBox/ScoreLabel
+@onready var best_score_label = $CanvasLayer/UIBox/BestScoreLabel
 @onready var time_label = $CanvasLayer/UIBox/TimeLabel
 @onready var status_label = $CanvasLayer/UIBox/StatusLabel
 @onready var player = $Player
@@ -22,8 +24,8 @@ func start_new_game():
 	time_left = 20
 	game_active = true
 	status_label.text = "Topla!"
-	update_ui()
 	move_collectible()
+	update_ui()
 	game_timer.start()
 
 func _physics_process(_delta):
@@ -35,7 +37,9 @@ func _physics_process(_delta):
 
 func update_ui():
 	score_label.text = "Skor: %d" % score
+	best_score_label.text = "En iyi skor: %d" % best_score
 	time_label.text = "Süre: %d" % time_left
+	
 
 func move_collectible():
 	var size = get_viewport_rect().size
@@ -47,6 +51,10 @@ func move_collectible():
 func check_collect():
 	if player.global_position.distance_to(collectible.global_position) < 25:
 		score += 1
+
+		if score > best_score:
+			best_score = score
+
 		update_ui()
 		move_collectible()
 
@@ -63,4 +71,10 @@ func _on_game_timer_timeout():
 func finish_game():
 	game_active = false
 	game_timer.stop()
-	status_label.text = "Süre doldu! Enter ile yeniden başlat."
+
+	if score <= 4:
+		status_label.text = "Zayıf tur. Enter ile tekrar dene."
+	elif score <= 9:
+		status_label.text = "İdare eder. Enter ile tekrar dene."
+	else:
+		status_label.text = "Güzel tur! Enter ile tekrar dene."
