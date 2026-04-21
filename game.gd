@@ -16,6 +16,7 @@ var rng := RandomNumberGenerator.new()
 @onready var hazard = $Hazard
 @onready var bonus = $Bonus
 @onready var game_timer = $GameTimer
+@onready var message_timer = $MessageTimer
 
 func _ready():
 	rng.randomize()
@@ -25,7 +26,7 @@ func start_new_game():
 	score = 0
 	time_left = 20
 	game_active = true
-	status_label.text = "Topla, kaçın, bonusu kap!"
+	set_default_status()
 
 	move_collectible([])
 	move_hazard([collectible.global_position])
@@ -47,6 +48,17 @@ func update_ui():
 	score_label.text = "Skor: %d" % score
 	best_score_label.text = "En iyi skor: %d" % best_score
 	time_label.text = "Süre: %d" % time_left
+	
+func set_default_status():
+	if game_active:
+		status_label.text = "Topla, kaçın, bonusu kap!"
+
+func show_temp_status(text: String):
+	status_label.text = text
+	message_timer.start()
+
+func _on_message_timer_timeout():
+	set_default_status()	
 
 func get_safe_random_position(excluded_positions: Array, min_distance: float) -> Vector2:
 	var size = get_viewport_rect().size
@@ -85,7 +97,7 @@ func check_collect():
 		if score > best_score:
 			best_score = score
 
-		status_label.text = "Topladın!"
+		show_temp_status("Topladın!")
 		update_ui()
 		move_collectible([hazard.global_position, bonus.global_position])
 
@@ -96,7 +108,7 @@ func check_hazard():
 		if time_left < 0:
 			time_left = 0
 
-		status_label.text = "Çarptın! -3 saniye"
+		show_temp_status("Çarptın! -3 saniye")
 		update_ui()
 		move_hazard([collectible.global_position, bonus.global_position])
 
@@ -106,7 +118,7 @@ func check_hazard():
 func check_bonus():
 	if player.global_position.distance_to(bonus.global_position) < 25:
 		time_left+=2
-		status_label.text="Bonus! +2 saniye"
+		show_temp_status("Bonus! +2 saniye")
 		update_ui()
 		move_bonus([collectible.global_position, hazard.global_position])
 
@@ -123,6 +135,7 @@ func _on_game_timer_timeout():
 func finish_game():
 	game_active = false
 	game_timer.stop()
+	message_timer.stop()
 
 	if score <= 4:
 		status_label.text = "Zayıf tur. Enter ile tekrar dene."

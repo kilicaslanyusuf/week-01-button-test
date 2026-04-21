@@ -45,6 +45,10 @@ text = "Topla!"
 
 [node name="GameTimer" type="Timer" parent="." unique_id=2077921762]
 
+[node name="MessageTimer" type="Timer" parent="." unique_id=1531941421]
+wait_time = 0.8
+one_shot = true
+
 [node name="Player" type="CharacterBody2D" parent="." unique_id=86132533]
 script = ExtResource("1_86kap")
 
@@ -84,4 +88,5 @@ texture = ExtResource("2_iik1f")
 shape = SubResource("CircleShape2D_750j1")
 
 [connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
+[connection signal="timeout" from="MessageTimer" to="." method="_on_message_timer_timeout"]
 [connection signal="body_entered" from="Collectible" to="." method="_on_collectible_body_entered"]
