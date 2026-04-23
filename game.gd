@@ -1,5 +1,5 @@
 extends Node2D
-
+var new_record_this_run := false
 var score := 0
 var best_score := 0
 var time_left := 20
@@ -36,6 +36,7 @@ func start_new_game():
 	score = 0
 	time_left = 20
 	game_active = true
+	new_record_this_run = false
 	set_world_visible(true)
 
 	move_collectible([])
@@ -113,6 +114,7 @@ func check_collect():
 
 		if score > best_score:
 			best_score = score
+			new_record_this_run = true
 
 		update_ui()
 		show_temp_status("Topladın!")
@@ -148,6 +150,16 @@ func _on_game_timer_timeout():
 
 	if time_left <= 0:
 		finish_game()
+		
+func get_grade_text() -> String:
+	if score <= 4:
+		return "Zayıf"
+	elif score <= 9:
+		return "İdare eder"
+	elif score <= 14:
+		return "İyi"
+	else:
+		return "Çok iyi"		
 
 func finish_game():
 	game_active = false
@@ -155,9 +167,10 @@ func finish_game():
 	message_timer.stop()
 	set_world_visible(true)
 
-	if score <= 4:
-		status_label.text = "Bitti. Skor: %d | Zayıf tur. Enter ile tekrar dene." % score
-	elif score <= 9:
-		status_label.text = "Bitti. Skor: %d | İdare eder. Enter ile tekrar dene." % score
-	else:
-		status_label.text = "Bitti. Skor: %d | Güzel tur! Enter ile tekrar dene." % score
+	var result_text = "Bitti. Skor: %d | Derece: %s" % [score, get_grade_text()]
+
+	if new_record_this_run:
+		result_text += " | Yeni rekor!"
+
+	result_text += " | Enter ile tekrar dene."
+	status_label.text = result_text
