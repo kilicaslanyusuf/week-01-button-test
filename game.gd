@@ -1,4 +1,6 @@
 extends Node2D
+
+var max_time := 30
 var new_record_this_run := false
 var score := 0
 var best_score := 0
@@ -30,7 +32,7 @@ func show_start_screen():
 	message_timer.stop()
 	set_world_visible(false)
 	update_ui()
-	status_label.text = "Başlamak için Enter"
+	status_label.text = "Collector Rush\nBaşlamak için Enter"
 
 func start_new_game():
 	score = 0
@@ -136,9 +138,15 @@ func check_hazard():
 
 func check_bonus():
 	if player.global_position.distance_to(bonus.global_position) < 25:
-		time_left += 2
+		var old_time = time_left
+		time_left = min(time_left + 2, max_time)
+
+		if time_left > old_time:
+			show_temp_status("Bonus! +2 saniye")
+		else:
+			show_temp_status("Süre maksimumda")
+
 		update_ui()
-		show_temp_status("Bonus! +2 saniye")
 		move_bonus([collectible.global_position, hazard.global_position])
 
 func _on_game_timer_timeout():
@@ -167,7 +175,7 @@ func finish_game():
 	message_timer.stop()
 	set_world_visible(true)
 
-	var result_text = "Bitti. Skor: %d | Derece: %s" % [score, get_grade_text()]
+	var result_text = "Bitti. Skor: %d | En iyi: %d | Derece: %s" % [score, best_score, get_grade_text()]
 
 	if new_record_this_run:
 		result_text += " | Yeni rekor!"
