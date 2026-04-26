@@ -1,5 +1,6 @@
 extends Node2D
 
+var enemy_speed := 180.0
 var time_left := 15
 var game_active := false
 
@@ -27,7 +28,7 @@ func start_game():
 	player.visible = true
 	enemy.visible = true
 	player.global_position = Vector2(200, 200)
-	enemy.global_position = Vector2(700, 300)
+	enemy.global_position = Vector2(900, 500)
 	update_ui()
 	status_label.text = "Kaç!"
 	game_timer.start()
@@ -40,7 +41,12 @@ func _physics_process(_delta):
 		start_game()
 
 	if game_active:
+		move_enemy(_delta)
 		check_enemy_collision()
+
+func move_enemy(delta):
+	var direction = (player.global_position - enemy.global_position).normalized()
+	enemy.global_position += direction * enemy_speed * delta
 
 func check_enemy_collision():
 	if player.global_position.distance_to(enemy.global_position) < 30:
