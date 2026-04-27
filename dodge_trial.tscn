@@ -10,6 +10,9 @@ radius = 18.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_yyru8"]
 radius = 18.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_m55nn"]
+radius = 18.0
+
 [node name="Game" type="Node2D" unique_id=897337900]
 script = ExtResource("1_m55nn")
 
@@ -46,5 +49,14 @@ texture = ExtResource("3_x2wng")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy" unique_id=288480126]
 shape = SubResource("CircleShape2D_yyru8")
+
+[node name="Enemy2" type="Area2D" parent="." unique_id=589868809]
+
+[node name="Sprite2D" type="Sprite2D" parent="Enemy2" unique_id=990557323]
+modulate = Color(0.45882353, 0, 0, 1)
+texture = ExtResource("3_x2wng")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy2" unique_id=706318542]
+shape = SubResource("CircleShape2D_m55nn")
 
 [connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
